@@ -1,0 +1,69 @@
+properties(
+    [
+        disableConcurrentBuilds()
+    ]
+)
+
+node {
+    try {
+    stage('Checkout') {
+        checkout scm
+
+        //branch name from Jenkins environment variables
+        echo "My branch is: ${env.BRANCH_NAME}"
+    }
+
+    stage('Build self-ci-base') {
+        sh '''
+        set -ex
+
+        image_tag="$BRANCH_NAME"
+        [ "$image_tag" == "master" ] && image_tag=latest
+
+        # refresh our base image
+        docker pull archlinux/base:latest
+
+        # build our image
+        docker build -t "moparisthebest/self-ci-base:$image_tag" .
+        '''
+    }
+
+    stage('Build self-ci-java') {
+        sh '''
+        set -ex
+
+        image_tag="$BRANCH_NAME"
+        [ "$image_tag" == "master" ] && image_tag=latest
+
+        cd java
+
+        # build our image
+        docker build -t "moparisthebest/self-ci-java:$image_tag" .
+
+        cd ..
+        '''
+    }
+
+    stage('Push to docker hub') {
+        sh '''
+        set -ex
+
+        image_tag="$BRANCH_NAME"
+        [ "$image_tag" == "master" ] && image_tag=latest
+
+        # push our images, don't forget to docker login
+        docker push "moparisthebest/self-ci-base:$image_tag"
+        docker push "moparisthebest/self-ci-java:$image_tag"
+        '''
+    }
+
+        currentBuild.result = 'SUCCESS'
+    } catch (Exception err) {
+        currentBuild.result = 'FAILURE'
+    } finally {
+        stage('Email') {
+            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'admin.jenkins@moparisthebest.com', sendToIndividuals: true])
+        }
+        deleteDir()
+    }
+}
