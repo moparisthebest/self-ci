@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# first arg can be a numeric version, or a folder in /usr/lib/jvm/
+jdk="$1"
+shift
+
+JAVA_HOME="/usr/lib/jvm/$jdk"
+
+M2_HOME="/opt/maven"
+
+if [ ! -d "$JAVA_HOME" ]
+then
+    # it's probably a number
+    JAVA_VERSION="$jdk"
+
+    case "$JAVA_VERSION" in
+        6)
+            jdk=java-6-jdk
+            ;;
+        7)
+            jdk=java-7-openjdk
+            ;;
+        8)
+            jdk=java-8-openjdk
+            ;;
+        9)
+            jdk=jdk-9
+            ;;
+        10)
+            jdk=jdk-10
+            ;;
+        11)
+            jdk=java-11-openjdk
+            ;;
+        12)
+            jdk=jdk-12
+            ;;
+        13)
+            jdk=jdk-13
+            ;;
+        14)
+            jdk=java-14-openjdk
+            ;;
+        15)
+            jdk=jdk-15
+            ;;
+        16)
+            jdk=jdk-16
+            ;;
+        *)
+            echo "run-java: unknown jdk: $jdk"
+            exit 1
+            ;;
+    esac
+
+    JAVA_HOME="/usr/lib/jvm/$jdk"
+else
+    # it's a folder
+    JAVA_VERSION="$(echo "$jdk" | grep -Eo '[0-9]+')"
+fi
+
+# maven 3.2.5 is the latest version supported by 6
+[ $JAVA_VERSION -eq 6 ] && export M2_HOME="/opt/apache-maven-3.2.5"
+
+JAVA_VERSION=$JAVA_VERSION M2_HOME="$M2_HOME" JAVA_HOME="$JAVA_HOME" PATH="$JAVA_HOME/bin:$M2_HOME/bin:$PATH" exec "$@"

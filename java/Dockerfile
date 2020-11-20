@@ -22,7 +22,7 @@ RUN mkdir /m2 /npm && ln -sf /m2/ /root/.m2 && ln -sf /npm/ /root/.npm && \
     curl https://download.java.net/java/early_access/jdk16/23/GPL/openjdk-16-ea+23_linux-x64_bin.tar.gz | bsdtar -xf - -C /usr/lib/jvm && \
     mv /usr/lib/jvm/java-se-9-ri/jdk-9 /usr/lib/jvm/ && rm -rf java-se-9-ri && chmod +x /usr/lib/jvm/jdk-9/bin/*
 
-COPY ./build.sh /usr/bin/
+COPY ./build.sh ./run-java /usr/bin/
 
 VOLUME [ "/build", "/m2", "/npm" ]
 
