@@ -5,4 +5,4 @@ self-ci
 
 This is one of the steps in fully replacing travis-ci for my own uses, but feel free to use/PR/improve.
 
-todo: point to self-ci-java etc
+todo: point to self-ci-java, rust etc

@@ -7,8 +7,10 @@ if [ ! -z "${BUILD_UID:-}" ]
 then
     BUILD_GID="${BUILD_GID:-$BUILD_UID}"
     groupadd -r -g "$BUILD_GID" jenkins
-    useradd -r -u "$BUILD_UID" -g "$BUILD_GID" -s /bin/bash -m -d /root jenkins
-    chown "$BUILD_UID":"$BUILD_GID" /root
+    additional_groups=''
+    [ -e /var/run/docker.sock ] && additional_groups="-G $(stat -c '%g' /var/run/docker.sock)"
+    useradd -r -u "$BUILD_UID" -g "$BUILD_GID" $additional_groups -s /bin/bash -m -d /root jenkins
+    chown -R "$BUILD_UID":"$BUILD_GID" /root
     #exec runuser -m jenkins -- "$@"
     exec sudo -E -u jenkins -- "$@"
 fi
