@@ -31,7 +31,7 @@ node {
     stage('Build self-ci-java') {
         sh '''
         set -ex
-exit 0
+
         image_tag="$BRANCH_NAME"
         [ "$image_tag" == "master" ] && image_tag=latest
 
@@ -39,22 +39,6 @@ exit 0
 
         # build our image
         docker build -t "moparisthebest/self-ci-java:$image_tag" .
-
-        cd ..
-        '''
-    }
-
-    stage('Build self-ci-rust') {
-        sh '''
-        set -ex
-
-        image_tag="$BRANCH_NAME"
-        [ "$image_tag" == "master" ] && image_tag=latest
-
-        cd rust
-
-        # build our image
-        docker build -t "moparisthebest/self-ci-rust:$image_tag" .
 
         cd ..
         '''
@@ -69,8 +53,7 @@ exit 0
 
         # push our images, don't forget to docker login
         docker push "moparisthebest/self-ci-base:$image_tag"
-        #docker push "moparisthebest/self-ci-java:$image_tag"
-        docker push "moparisthebest/self-ci-rust:$image_tag"
+        docker push "moparisthebest/self-ci-java:$image_tag"
         '''
     }
 
