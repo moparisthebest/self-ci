@@ -60,6 +60,6 @@ else
 fi
 
 # maven 3.2.5 is the latest version supported by 6
-[ $JAVA_VERSION -eq 6 ] && export M2_HOME="/opt/apache-maven-3.2.5"
+[ $JAVA_VERSION -eq 6 ] && M2_HOME="/opt/apache-maven-3.2.5"
 
 JAVA_VERSION=$JAVA_VERSION M2_HOME="$M2_HOME" JAVA_HOME="$JAVA_HOME" PATH="$JAVA_HOME/bin:$M2_HOME/bin:$PATH" exec "$@"

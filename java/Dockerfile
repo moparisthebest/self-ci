@@ -22,10 +22,11 @@ RUN mkdir /m2 /npm && ln -sf /m2/ /root/.m2 && ln -sf /npm/ /root/.npm && \
     curl https://download.java.net/java/early_access/jdk16/23/GPL/openjdk-16-ea+23_linux-x64_bin.tar.gz | bsdtar -xf - -C /usr/lib/jvm && \
     mv /usr/lib/jvm/java-se-9-ri/jdk-9 /usr/lib/jvm/ && rm -rf java-se-9-ri && chmod +x /usr/lib/jvm/jdk-9/bin/*
 
-COPY ./build.sh ./run-java /usr/bin/
+COPY ./run-java-all ./run-java /usr/bin/
+RUN ln -sf /usr/bin/run-java-all /usr/bin/build.sh
 
-VOLUME [ "/build", "/m2", "/npm" ]
+VOLUME [ "/build", "/m2", "/npm", "/root/.netrc" ]
 
 WORKDIR /build
 ENTRYPOINT ["/usr/bin/run.sh"]
-CMD ["/usr/bin/build.sh", "./.jenkins/build.sh"]
+CMD ["/usr/bin/run-java-all", "./.jenkins/build.sh"]
