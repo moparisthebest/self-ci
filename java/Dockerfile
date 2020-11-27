@@ -23,10 +23,9 @@ RUN mkdir /m2 /npm && ln -sf /m2/ /root/.m2 && ln -sf /npm/ /root/.npm && \
     mv /usr/lib/jvm/java-se-9-ri/jdk-9 /usr/lib/jvm/ && rm -rf java-se-9-ri && chmod +x /usr/lib/jvm/jdk-9/bin/*
 
 COPY ./run-java-all ./run-java /usr/bin/
-RUN ln -sf /usr/bin/run-java-all /usr/bin/build.sh
 
 VOLUME [ "/build", "/m2", "/npm", "/root/.netrc" ]
 
 WORKDIR /build
 ENTRYPOINT ["/usr/bin/run.sh"]
-CMD ["/usr/bin/run-java-all", "./.jenkins/build.sh"]
+CMD ["/usr/bin/run-java-all", "./.ci/build.sh"]

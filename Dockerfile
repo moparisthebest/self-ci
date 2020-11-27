@@ -15,7 +15,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone &
     echo -e "Server = $PACMAN_MIRROR/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist && \
     echo "TZ=$TZ" > /etc/environment && \
     pacman -Syu --noconfirm --needed sed grep gawk sudo git which jq && \
-    echo 'jenkins ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/jenkins
+    echo 'ci ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/ci
 
 COPY ./run.sh ./ci-release-helper.sh /usr/bin/
 

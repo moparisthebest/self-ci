@@ -4,7 +4,6 @@ set -euo pipefail
 BUILD_SCRIPT="$1"
 shift
 [ "" == "$BUILD_SCRIPT" ] && [ -f '.ci/build.sh' ] && BUILD_SCRIPT='.ci/build.sh'
-[ "" == "$BUILD_SCRIPT" ] && [ -f '.jenkins/build.sh' ] && BUILD_SCRIPT='.jenkins/build.sh'
 
 export CROSS_VERSION=0.2.1
 

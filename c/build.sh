@@ -4,8 +4,6 @@ set -euxo pipefail
 BUILD_SCRIPT="$1"
 shift
 [ "" == "$BUILD_SCRIPT" ] && [ -f '.ci/build.sh' ] && BUILD_SCRIPT='.ci/build.sh'
-[ "" == "$BUILD_SCRIPT" ] && [ -f '.jenkins/build.sh' ] && BUILD_SCRIPT='.jenkins/build.sh'
-
 
 # this assists in cleanup, ie if a job was terminated, to be run in a jenkins finally {} or similar
 if [ "$BUILD_SCRIPT" == "docker-chown" ]
@@ -22,7 +20,7 @@ docker_build() {
     shift
 
     # run it, but after, chown anything left in /tmp to *this* uid/gid, otherwise we can't delete them later...
-    docker run --rm -e ARCH -e BRANCH_NAME -e BUILD_UID="$UID" -e BUILD_GID="$(id -g)" -v "$(pwd)":/tmp -w /tmp "$DOCKER_IMAGE" sh -c "\"\$@\"; exit=\$?; chown -R '$UID:$(id -g)' /tmp; exit \$exit" -- "$@"
+    docker run --rm -e ARCH -e BRANCH_NAME -e BUILD_UID="$UID" -e BUILD_GID="$(id -g)" -v "$(pwd)":/tmp -w /tmp "$DOCKER_IMAGE" sh -c "umask a=rwx; \"\$@\"; exit=\$?; chown -R '$UID:$(id -g)' /tmp; exit \$exit" -- "$@"
 }
 
 docker_build 'amd64'   'alpine'                                 "$BUILD_SCRIPT" "$@"

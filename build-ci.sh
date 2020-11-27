@@ -15,10 +15,6 @@ RELEASE_SCRIPT='.ci/release.sh'
 BUILD_SCRIPT='.ci/build.sh'
 DEFAULT_RELEASE_DIR='release'
 
-# compat with alternative directory name
-[ ! -f "$RELEASE_SCRIPT" ] && [ -f '.jenkins/release.sh' ] && RELEASE_SCRIPT='.jenkins/release.sh'
-[ ! -f "$BUILD_SCRIPT" ] && [ -f '.jenkins/build.sh' ] && BUILD_SCRIPT='.jenkins/build.sh'
-
 function usage {
         echo "$@"
         echo

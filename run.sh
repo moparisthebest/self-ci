@@ -6,11 +6,11 @@
 if [ ! -z "${BUILD_UID:-}" ]
 then
     BUILD_GID="${BUILD_GID:-$BUILD_UID}"
-    groupadd -r -g "$BUILD_GID" jenkins
-    useradd -r -u "$BUILD_UID" -g "$BUILD_GID" -s /bin/bash -m -d /root jenkins
+    groupadd -r -g "$BUILD_GID" ci
+    useradd -r -u "$BUILD_UID" -g "$BUILD_GID" -s /bin/bash -m -d /root ci
     chown "$BUILD_UID":"$BUILD_GID" /root
-    #exec runuser -m jenkins -- "$@"
-    exec sudo -E -u jenkins -- "$@"
+    #exec runuser -m ci -- "$@"
+    exec sudo -E -u ci -- "$@"
 fi
 
 # otherwise just run as root
