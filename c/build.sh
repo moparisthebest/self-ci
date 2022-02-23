@@ -31,4 +31,5 @@ docker run --rm --privileged multiarch/qemu-user-static:register --reset
 docker_build 'i386'    'multiarch/alpine:i386-latest-stable'    "$BUILD_SCRIPT" "$@"
 docker_build 'aarch64' 'multiarch/alpine:aarch64-latest-stable' "$BUILD_SCRIPT" "$@"
 docker_build 'armv7'   'multiarch/alpine:armv7-latest-stable'   "$BUILD_SCRIPT" "$@"
+docker_build 'armhf'   'multiarch/alpine:armhf-latest-stable'   "$BUILD_SCRIPT" "$@"
 docker_build 'ppc64le' 'multiarch/alpine:ppc64le-latest-stable' "$BUILD_SCRIPT" "$@"
