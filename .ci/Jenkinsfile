@@ -21,7 +21,7 @@ node {
         [ "$image_tag" == "master" ] && image_tag=latest
 
         # refresh our base image
-        docker pull archlinux/base:latest
+        docker pull docker.io/library/archlinux:latest
 
         # build our image
         docker build -t "moparisthebest/self-ci-base:$image_tag" .

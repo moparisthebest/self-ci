@@ -1,6 +1,6 @@
 
 
-FROM archlinux/base:latest
+FROM docker.io/library/archlinux:latest
 
 ENV PACMAN_MIRROR https://burtrum.org/archlinux
 
