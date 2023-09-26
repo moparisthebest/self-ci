@@ -10,8 +10,8 @@ export CROSS_VERSION=0.2.1
 for TARGET in ${BUILD_TARGETS:-x86_64-unknown-linux-musl x86_64-unknown-linux-gnu i686-unknown-linux-musl i686-unknown-linux-gnu i586-unknown-linux-musl i586-unknown-linux-gnu aarch64-unknown-linux-musl aarch64-unknown-linux-gnu armv7-unknown-linux-gnueabihf armv7-unknown-linux-musleabihf arm-unknown-linux-gnueabi arm-unknown-linux-gnueabihf arm-unknown-linux-musleabi arm-unknown-linux-musleabihf armv5te-unknown-linux-gnueabi armv5te-unknown-linux-musleabi x86_64-pc-windows-gnu x86_64-linux-android i686-linux-android aarch64-linux-android armv7-linux-androideabi arm-linux-androideabi mips64el-unknown-linux-gnuabi64 mips64-unknown-linux-gnuabi64 mipsel-unknown-linux-gnu mipsel-unknown-linux-musl mips-unknown-linux-gnu mips-unknown-linux-musl powerpc64le-unknown-linux-gnu powerpc-unknown-linux-gnu riscv64gc-unknown-linux-gnu s390x-unknown-linux-gnu x86_64-sun-solaris sparcv9-sun-solaris x86_64-unknown-netbsd}
 do
 
-    # running `docker system prune -af` after these because they are roughly every 25% through and my hard drive space is limited
-    echo "$TARGET" | grep -E  '^(armv7-unknown-linux-gnueabihf|x86_64-linux-android|mips-unknown-linux-gnu)$' >/dev/null && docker system prune -af
+    # running `docker system prune -af` after these because my hard drive space is limited
+    echo "$TARGET" | grep -E  '^(i586-unknown-linux-gnu|arm-unknown-linux-gnueabihf|x86_64-linux-android|aarch64-linux-android|mips64-unknown-linux-gnuabi64|powerpc-unknown-linux-gnu)$' >/dev/null && docker system prune -af
 
     # to work around https://github.com/cross-rs/cross/issues/724
     cargo clean
