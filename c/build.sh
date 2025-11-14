@@ -48,15 +48,8 @@ docker_build() {
 
 docker_build 'amd64'   "$BUILD_SCRIPT" "$@"
 
-# before first multiarch image, must register binfmt handlers, for rootless podman we require sudo
-if [ $PODMAN_NOT_DOCKER -eq 0 ]
-then
-    # to securely enable this run `visudo` and add this where `jenkins` is your user:
-    # jenkins ALL=(ALL:ALL) NOPASSWD: /usr/bin/podman run --rm --privileged docker.io/multiarch/qemu-user-static\:register --reset
-    sudo podman run --rm --privileged docker.io/multiarch/qemu-user-static:register --reset
-else
-    docker run --rm --privileged docker.io/multiarch/qemu-user-static:register --reset
-fi
+# before first multiarch image, must register binfmt handlers, for arch run:
+# pacman -S qemu-user-static-binfmt qemu-user-static
 
 docker_build 'i386'    "$BUILD_SCRIPT" "$@"
 docker_build 'aarch64' "$BUILD_SCRIPT" "$@"
