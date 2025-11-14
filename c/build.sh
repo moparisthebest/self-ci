@@ -35,20 +35,18 @@ fi
 docker_build() {
     export ARCH="$1"
     shift
-    DOCKER_IMAGE="$1"
-    shift
     
     if [ $PODMAN_NOT_DOCKER -eq 0 ]
     then
         # just run it and don't chown
-        podman run --rm -e ARCH -e BRANCH_NAME -v "$(pwd)":/tmp -w /tmp "$DOCKER_IMAGE" sh -c "umask a=rwx; \"\$@\"" -- "$@"
+        podman run --rm --arch "$ARCH" -e ARCH -e BRANCH_NAME -v "$(pwd)":/tmp -w /tmp 'docker.io/alpine' sh -c "umask a=rwx; \"\$@\"" -- "$@"
     else
         # run it, but after, chown anything left in /tmp to *this* uid/gid, otherwise we can't delete them later...
-        docker run --rm -e ARCH -e BRANCH_NAME -e BUILD_UID="$UID" -e BUILD_GID="$(id -g)" -v "$(pwd)":/tmp -w /tmp "$DOCKER_IMAGE" sh -c "umask a=rwx; \"\$@\"; exit=\$?; chown -R '$UID:$(id -g)' /tmp; exit \$exit" -- "$@"
+        docker run --rm --arch "$ARCH" -e ARCH -e BRANCH_NAME -e BUILD_UID="$UID" -e BUILD_GID="$(id -g)" -v "$(pwd)":/tmp -w /tmp 'docker.io/alpine' sh -c "umask a=rwx; \"\$@\"; exit=\$?; chown -R '$UID:$(id -g)' /tmp; exit \$exit" -- "$@"
     fi
 }
 
-docker_build 'amd64'   'docker.io/alpine'                                 "$BUILD_SCRIPT" "$@"
+docker_build 'amd64'   "$BUILD_SCRIPT" "$@"
 
 # before first multiarch image, must register binfmt handlers, for rootless podman we require sudo
 if [ $PODMAN_NOT_DOCKER -eq 0 ]
@@ -60,8 +58,8 @@ else
     docker run --rm --privileged docker.io/multiarch/qemu-user-static:register --reset
 fi
 
-docker_build 'i386'    'docker.io/multiarch/alpine:i386-latest-stable'    "$BUILD_SCRIPT" "$@"
-docker_build 'aarch64' 'docker.io/multiarch/alpine:aarch64-latest-stable' "$BUILD_SCRIPT" "$@"
-docker_build 'armv7'   'docker.io/multiarch/alpine:armv7-latest-stable'   "$BUILD_SCRIPT" "$@"
-docker_build 'armhf'   'docker.io/multiarch/alpine:armhf-latest-stable'   "$BUILD_SCRIPT" "$@"
-docker_build 'ppc64le' 'docker.io/multiarch/alpine:ppc64le-latest-stable' "$BUILD_SCRIPT" "$@"
+docker_build 'i386'    "$BUILD_SCRIPT" "$@"
+docker_build 'aarch64' "$BUILD_SCRIPT" "$@"
+docker_build 'armv7'   "$BUILD_SCRIPT" "$@"
+docker_build 'armhf'   "$BUILD_SCRIPT" "$@"
+docker_build 'ppc64le' "$BUILD_SCRIPT" "$@"
