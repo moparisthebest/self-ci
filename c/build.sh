@@ -46,13 +46,10 @@ docker_build() {
     fi
 }
 
-docker_build 'amd64'   "$BUILD_SCRIPT" "$@"
-
 # before first multiarch image, must register binfmt handlers, for arch run:
 # pacman -S qemu-user-static-binfmt qemu-user-static
 
-docker_build 'i386'    "$BUILD_SCRIPT" "$@"
-docker_build 'aarch64' "$BUILD_SCRIPT" "$@"
-docker_build 'armv7'   "$BUILD_SCRIPT" "$@"
-docker_build 'armhf'   "$BUILD_SCRIPT" "$@"
-docker_build 'ppc64le' "$BUILD_SCRIPT" "$@"
+for arch in amd64 i386 armhf ppc64le riscv64 s390x
+do
+    docker_build "$arch" "$BUILD_SCRIPT" "$@"
+done
