@@ -49,7 +49,8 @@ docker_build() {
 # before first multiarch image, must register binfmt handlers, for arch run:
 # pacman -S qemu-user-static-binfmt qemu-user-static
 
-for arch in amd64 i386 armhf ppc64le riscv64 s390x
+for arch in amd64 i386 armhf ppc64le riscv64
+# s390x is currently broken, hangs during configure
 do
     docker_build "$arch" "$BUILD_SCRIPT" "$@"
 done
